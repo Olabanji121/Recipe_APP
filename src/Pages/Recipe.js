@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { recipeData } from "../data/tempDetails";
+import LoadImg from '../components/spinner'
 import { Link } from "react-router-dom";
 
 export default class Recipe extends Component {
@@ -7,11 +7,36 @@ export default class Recipe extends Component {
 		super(props);
 		const id = this.props.match.params.id;
 		this.state = {
-			recipe: recipeData,
+			// recipe: recipeData,
+			recipe: {},
 			id,
-			loading: false
+			loading: true
 		};
-	}
+    }
+    
+    async componentDidMount(){
+        const url = `https://www.food2fork.com/api/get?key=${process.env.REACT_APP_API_KEY}&rId=${this.state.id}`;
+        try{
+            const res = await fetch(url);
+            // console.log(res);
+            const resData = await res.json()
+            // console.log(resData);
+
+            this.setState({
+                recipe: resData.recipe,
+                loading: false
+
+            })
+            
+            
+            
+
+        } catch(err){
+            console.log(err);
+            
+        }
+
+    }
 
 	render() {
 
@@ -31,7 +56,7 @@ export default class Recipe extends Component {
                 <div className="container">
                     <div className="row">
                         <div className="col-10 mx-auto col-md-6 my-3">
-                            <h2 className="text-slanted text-info  text-center py-5">Data Loading.....</h2>
+                            <LoadImg/>
                         </div>
                     </div>
                 </div>
